@@ -32,12 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EasyModbus">
-      <HintPath>obj\Debug\EasyModbus.dll</HintPath>
+    <Reference Include="EasyModbus, Version=1.0.5588.38589, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\EasyModbus.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.OPCAutomation">
-      <HintPath>obj\Debug\Interop.OPCAutomation.dll</HintPath>
+    <Reference Include="Interop.OPCAutomation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>lib\Interop.OPCAutomation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
