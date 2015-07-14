@@ -1,111 +1,152 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using System.IO;
 using OPCAutomation;
 using EasyModbus;
 
 namespace OPC2Modbus
 {
+
     public partial class Opc2Modbus : Form
     {
-        String OPCServerName;
-        OPCServer ObjOPCServer;
-        OPCGroups ObjOPCGroups;
-        OPCGroup ObjOPCGroupC01;
-        OPCGroup ObjOPCGroupC02;
-        OPCGroup ObjOPCGroupC03;
-        OPCGroup ObjOPCGroupC04;
-        ModbusServer modbusServer = new ModbusServer();
+        private OPCServer ObjOPCServer;
+        private Dictionary<int, OPCItem> Items = new Dictionary<int, OPCItem>();
+        private OPCGroups ObjOPCGroups;
+        private OPCGroup ObjOPCGroup;
+        private ModbusServer modbusServer = new ModbusServer();
         private Boolean bExit = false;
+        private Boolean bFatal = false;
 
         public Opc2Modbus()
         {
             InitializeComponent();
         }
-        
-        private void Opc2Modbus_Load(object sender, EventArgs e)
+
+        private bool ReadItemsCSV()
         {
-            // Visualize only in nofification bar.
-            this.Hide();
-            this.WindowState = FormWindowState.Minimized;
-            //OPCServerName = "POPCS.DAServer.1";
-            OPCServerName = "Matrikon.OPC.Simulation.1";
-            ObjOPCServer = new OPCServer();
             try
             {
-                ObjOPCServer.Connect(OPCServerName);
-                ObjOPCGroups = ObjOPCServer.OPCGroups;
-                ObjOPCGroupC01 = ObjOPCGroups.Add("C01");
-                //ObjOPCGroupC02 = ObjOPCGroups.Add("C02");
-                //ObjOPCGroupC03 = ObjOPCGroups.Add("C03");
-                //ObjOPCGroupC04 = ObjOPCGroups.Add("C04");
+                StreamReader reader = new StreamReader(File.OpenRead(@"..\..\etc\OPC2Modbus.csv"));
+                reader.ReadLine();  // Ignore the first line.
+                while (!reader.EndOfStream)
+                {
+                    String line = reader.ReadLine();
+                    String[] values = line.Split(',');
 
-                ObjOPCGroupC01.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(ObjOPCGroupC01_DataChange);
-                //ObjOPCGroupC02.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(ObjOPCGroupC02_DataChange);
-                //ObjOPCGroupC03.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(ObjOPCGroupC03_DataChange);
-                //ObjOPCGroupC04.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(ObjOPCGroupC04_DataChange);
-
-                ObjOPCGroupC01.OPCItems.AddItem("Bucket Brigade.Int1", 1);
-                ObjOPCGroupC01.OPCItems.AddItem("Bucket Brigade.Int2", 2);
-                ObjOPCGroupC01.OPCItems.AddItem("Bucket Brigade.Int4", 3);
-                ObjOPCGroupC01.OPCItems.AddItem("Bucket Brigade.Money", 4);
-                /*ObjOPCGroupC01.OPCItems.DefaultAccessPath = "C01";
-                ObjOPCGroupC01.OPCItems.AddItem("M0032", 1);
-                ObjOPCGroupC01.OPCItems.AddItem("M0033", 2);
-                ObjOPCGroupC01.OPCItems.AddItem("M0034", 3);
-                ObjOPCGroupC01.OPCItems.AddItem("M0035", 4);
-                ObjOPCGroupC01.OPCItems.AddItem("M0036", 5);
-                ObjOPCGroupC01.OPCItems.AddItem("M0037", 6);
-                ObjOPCGroupC01.OPCItems.AddItem("M0038", 7);
-                ObjOPCGroupC01.OPCItems.AddItem("M0039", 8);
-                ObjOPCGroupC01.OPCItems.AddItem("M0040", 9);
-                ObjOPCGroupC01.OPCItems.AddItem("M0041", 10);
-                ObjOPCGroupC01.OPCItems.AddItem("M0042", 11);
-                ObjOPCGroupC01.OPCItems.AddItem("M0043", 12);
-                ObjOPCGroupC01.OPCItems.AddItem("M0044", 13);
-                ObjOPCGroupC01.OPCItems.AddItem("M0045", 14);
-                ObjOPCGroupC01.OPCItems.AddItem("M0046", 15);
-                ObjOPCGroupC01.OPCItems.AddItem("M0047", 16);
-                ObjOPCGroupC01.OPCItems.AddItem("M0062", 17);
-                ObjOPCGroupC01.OPCItems.AddItem("M0063", 18);
-                ObjOPCGroupC01.OPCItems.AddItem("M0064", 19);
-                ObjOPCGroupC01.OPCItems.AddItem("M0065", 20);
-                ObjOPCGroupC01.OPCItems.AddItem("M0066", 21);
-                ObjOPCGroupC01.OPCItems.AddItem("M0067", 22);
-                ObjOPCGroupC01.OPCItems.AddItem("M0068", 23);
-                ObjOPCGroupC01.OPCItems.AddItem("M0069", 24);
-                ObjOPCGroupC01.OPCItems.AddItem("M0070", 25);
-                ObjOPCGroupC01.OPCItems.AddItem("M0071", 26);
-                ObjOPCGroupC01.OPCItems.AddItem("M0073", 27);
-                ObjOPCGroupC01.OPCItems.AddItem("M0080", 28);
-                ObjOPCGroupC01.OPCItems.AddItem("M0081", 29);
-                ObjOPCGroupC01.OPCItems.AddItem("M0082", 30);
-                ObjOPCGroupC01.OPCItems.AddItem("M0083", 31);
-                ObjOPCGroupC01.OPCItems.AddItem("M0084", 32);
-                ObjOPCGroupC01.OPCItems.AddItem("M0085", 33);
-                ObjOPCGroupC01.OPCItems.AddItem("M0086", 34);
-                ObjOPCGroupC01.OPCItems.AddItem("M0170", 35);
-                ObjOPCGroupC01.OPCItems.AddItem("M0171", 36);
-                ObjOPCGroupC01.OPCItems.AddItem("M0172", 37);*/
-
-                ObjOPCGroupC01.UpdateRate = 1000;
-                ObjOPCGroupC01.IsActive = true;
-                ObjOPCGroupC01.IsSubscribed = true;
-                /*ObjOPCGroupC02.UpdateRate = 1000;
-                ObjOPCGroupC02.IsActive = true;
-                ObjOPCGroupC02.IsSubscribed = true;
-                ObjOPCGroupC03.UpdateRate = 1000;
-                ObjOPCGroupC03.IsActive = true;
-                ObjOPCGroupC03.IsSubscribed = true;
-                ObjOPCGroupC04.UpdateRate = 1000;
-                ObjOPCGroupC04.IsActive = true;
-                ObjOPCGroupC04.IsSubscribed = true;*/
-                // Start modbus server.
-                modbusServer.Listen();
+                    Items.Add(int.Parse(values[0]), new OPCItem { ItemID = values[1], Compressor = "C01", Description = values[2] });
+                }
+                return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                OPC2Modbus.Program.Log.Fatal("Error al leer el archivo OPC2Modbus.csv. No existe o no tiene un formato correcto.", ex);
+                MessageBox.Show("Error al leer el archivo OPC2Modbus.csv. No existe o no tiene un formato correcto.\n La aplicación va ha cerrarse.", "Error fatal", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                bExit = true;
+                bFatal = true;
                 Application.Exit();
+                return false;
+            }
+        }
+
+        private void InitializeDictionary2()
+        {
+            
+            int Comp = 0;
+            Items.Add(Comp +  1, new OPCItem { ItemID = "M0032", Compressor = "C01", Description = "Suction gas temp" });
+            Items.Add(Comp +  2, new OPCItem { ItemID = "M0033", Compressor = "C01", Description = "Discharge gas temp." });
+            Items.Add(Comp +  3, new OPCItem { ItemID = "M0034", Compressor = "C01", Description = "Oil temp." });
+            Items.Add(Comp +  4, new OPCItem { ItemID = "M0035", Compressor = "C01", Description = "Suction pressure" });
+            Items.Add(Comp +  5, new OPCItem { ItemID = "M0036", Compressor = "C01", Description = "Discharge pressure" });
+            Items.Add(Comp +  6, new OPCItem { ItemID = "M0037", Compressor = "C01", Description = "Suction pressure" });
+            Items.Add(Comp +  7, new OPCItem { ItemID = "M0038", Compressor = "C01", Description = "Discharge pressure" });
+            Items.Add(Comp +  8, new OPCItem { ItemID = "M0039", Compressor = "C01", Description = "Capacity position" });
+            Items.Add(Comp +  9, new OPCItem { ItemID = "M0040", Compressor = "C01", Description = "Volume slide position (s)" });
+            Items.Add(Comp + 10, new OPCItem { ItemID = "M0041", Compressor = "C01", Description = "Motor current" });
+            Items.Add(Comp + 11, new OPCItem { ItemID = "M0042", Compressor = "C01", Description = "External input" });
+            Items.Add(Comp + 12, new OPCItem { ItemID = "M0043", Compressor = "C01", Description = "Oil filter diff. pressure (s) / Intermediate pressure (r)" });
+            Items.Add(Comp + 13, new OPCItem { ItemID = "M0044", Compressor = "C01", Description = "Suction gas superheat" });
+            Items.Add(Comp + 14, new OPCItem { ItemID = "M0045", Compressor = "C01", Description = "Brine / intermediate temperature" });
+            Items.Add(Comp + 15, new OPCItem { ItemID = "M0046", Compressor = "C01", Description = "Running hours" });
+            Items.Add(Comp + 16, new OPCItem { ItemID = "M0047", Compressor = "C01", Description = "Oil pressure" });
+            Items.Add(Comp + 17, new OPCItem { ItemID = "M0062", Compressor = "C01", Description = "Compressor mode" });
+            Items.Add(Comp + 18, new OPCItem { ItemID = "M0063", Compressor = "C01", Description = "Compressor control mode" });
+            Items.Add(Comp + 19, new OPCItem { ItemID = "M0064", Compressor = "C01", Description = "Sequence start number" });
+            Items.Add(Comp + 20, new OPCItem { ItemID = "M0065", Compressor = "C01", Description = "System number" });
+            Items.Add(Comp + 21, new OPCItem { ItemID = "M0066", Compressor = "C01", Description = "Ctrl. system (aggregate type)" });
+            Items.Add(Comp + 22, new OPCItem { ItemID = "M0067", Compressor = "C01", Description = "Multisab State" });
+            Items.Add(Comp + 23, new OPCItem { ItemID = "M0068", Compressor = "C01", Description = "Preceding compressor" });
+            Items.Add(Comp + 24, new OPCItem { ItemID = "M0069", Compressor = "C01", Description = "Next compressor" });
+            Items.Add(Comp + 25, new OPCItem { ItemID = "M0070", Compressor = "C01", Description = "Compressor to follow the next" });
+            Items.Add(Comp + 26, new OPCItem { ItemID = "M0071", Compressor = "C01", Description = "Selected sys regulator" });
+            Items.Add(Comp + 27, new OPCItem { ItemID = "M0073", Compressor = "C01", Description = "Liquid temperature T3" });
+            Items.Add(Comp + 28, new OPCItem { ItemID = "M0080", Compressor = "C01", Description = "Alarms (Reciprocating / Screw)" });
+            Items.Add(Comp + 29, new OPCItem { ItemID = "M0081", Compressor = "C01", Description = "Alarms (Reciprocating / Screw)" });
+            Items.Add(Comp + 30, new OPCItem { ItemID = "M0082", Compressor = "C01", Description = "Alarms (Reciprocating / Screw)" });
+            Items.Add(Comp + 31, new OPCItem { ItemID = "M0083", Compressor = "C01", Description = "Warnings (Reciprocating / Screw)" });
+            Items.Add(Comp + 32, new OPCItem { ItemID = "M0084", Compressor = "C01", Description = "Warnings (Reciprocating / Screw)" });
+            Items.Add(Comp + 33, new OPCItem { ItemID = "M0085", Compressor = "C01", Description = "Switch reg. SP1/ SP2" });
+            Items.Add(Comp + 34, new OPCItem { ItemID = "M0086", Compressor = "C01", Description = "Set point actual, suction pressure" });
+            Items.Add(Comp + 35, new OPCItem { ItemID = "M0170", Compressor = "C01", Description = "Compressor type" });
+            Items.Add(Comp + 36, new OPCItem { ItemID = "M0171", Compressor = "C01", Description = "Refrigerant type" });
+            Items.Add(Comp + 37, new OPCItem { ItemID = "M0172", Compressor = "C01", Description = "Regulation mode" });
+        }
+        
+        private void Opc2Modbus_Load(object sender, EventArgs e)
+        {
+            if (ReadItemsCSV())
+            {
+                // Visualize only in nofification bar.
+                this.Hide();
+                this.WindowState = FormWindowState.Minimized;
+
+                //Subscrib to OPC Server
+                ObjOPCServer = new OPCServer();
+                try
+                {
+                    //Conect to the server
+                    ObjOPCServer.Connect("POPCS.DAServer.1");
+
+                    //Create a group
+                    ObjOPCGroups = ObjOPCServer.OPCGroups;
+                    ObjOPCGroup = ObjOPCGroups.Add("C01");
+
+                    //Define event DataChange
+                    ObjOPCGroup.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(OPCGroup_DataChange);
+
+                    //Define DefaultAccessPath (necessary for POPCS.DAServer.1)
+                    ObjOPCGroup.OPCItems.DefaultAccessPath = "C01";
+
+                    //Define Items.
+                    for (int i = 1; i <= 37; i++ )
+                        ObjOPCGroup.OPCItems.AddItem(Items[i].ItemID, i);
+                    
+                    //Group properties
+                    ObjOPCGroup.UpdateRate = 1000;
+                    ObjOPCGroup.IsActive = true;
+                    ObjOPCGroup.IsSubscribed = true;
+                }
+                catch (Exception ex)
+                {
+                    OPC2Modbus.Program.Log.Fatal("Error al suscribirse al servidor OPC", ex);
+                    MessageBox.Show("Error al suscribirse al servidor OPC.\n La aplicación va ha cerrarse.", "Error fatal", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    bExit = true;
+                    bFatal = true;
+                    Application.Exit();
+                }
+                try
+                {
+                    // Start modbus server.
+                    modbusServer.Listen();
+                }
+                catch (Exception ex)
+                {
+                    OPC2Modbus.Program.Log.Fatal("Error al iniciar el servidor Modbus TCP", ex);
+                    MessageBox.Show("Error al iniciar el servidor Modbus TCP.\n La aplicación va ha cerrarse.", "Error fatal", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    bExit = true;
+                    bFatal = true;
+                    Application.Exit();
+                }
             }
         }
 
@@ -116,83 +157,39 @@ namespace OPC2Modbus
 
         private void Opc2Modbus_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (bExit)
+            if (!bFatal)
             {
-                if (MessageBox.Show("¿Seguro que quiere dejar de ejecutar OPC2Modbus?", "Salir de la aplicación", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                if (bExit)
                 {
-                    e.Cancel = true;
-                    bExit = false;
+                    if (MessageBox.Show("¿Seguro que quiere dejar de ejecutar OPC2Modbus?", "Salir de la aplicación", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                    {
+                        e.Cancel = true;
+                        bExit = false;
+                    }
                 }
-            }
-            else
-            {
-                MessageBox.Show("OPC2Modbus va seguir ejecutándose en la barra de tareas.", "Aviso de funcionamiento", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                this.Hide();
-                this.WindowState = FormWindowState.Minimized;
-                e.Cancel = true;
+                else
+                {
+                    MessageBox.Show("OPC2Modbus va seguir ejecutándose en la barra de tareas.", "Aviso de funcionamiento", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    this.Hide();
+                    this.WindowState = FormWindowState.Minimized;
+                    e.Cancel = true;
+                }
             }
         }
 
-        private void ObjOPCGroupC01_DataChange(int TransactionID, int NumItems, ref Array ClientHandles, ref Array ItemValues, ref Array Qualities, ref Array TimeStamps)
+        private void OPCGroup_DataChange(int TransactionID, int NumItems, ref Array ClientHandles, ref Array ItemValues, ref Array Qualities, ref Array TimeStamps)
         {
             for (int i = 1; i <= NumItems; i++)
             {
                 try
                 {
-                    //MessageBox.Show(ClientHandles.GetValue(i).ToString() + " -> " + ItemValues.GetValue(i).ToString());
                     modbusServer.holdingRegisters[(int)ClientHandles.GetValue(i)] = (short)ItemValues.GetValue(i);
-                    //MessageBox.Show(modbusServer.holdingRegisters[(int)ClientHandles.GetValue(i)].ToString());
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.ToString());
+                    OPC2Modbus.Program.Log.Error("Parámetro [" + Items[i].ItemID + ": " + Items[i].Compressor + " - " + Items[i].Description + "]; Valor [" + ItemValues.GetValue(i) + "]", ex);
                 }
             }   
-        }
-
-        private void ObjOPCGroupC02_DataChange(int TransactionID, int NumItems, ref Array ClientHandles, ref Array ItemValues, ref Array Qualities, ref Array TimeStamps)
-        {
-            for (int i = 1; i <= NumItems; i++)
-            {
-                if ((Convert.ToInt32(ClientHandles.GetValue(1)) == 1))
-                {
-                    modbusServer.holdingRegisters[3] = (short)ItemValues.GetValue(1);
-                }
-                if ((Convert.ToInt32(ClientHandles.GetValue(2)) == 1))
-                {
-                    modbusServer.holdingRegisters[4] = (short)ItemValues.GetValue(2);
-                }
-            }
-        }
-
-        private void ObjOPCGroupC03_DataChange(int TransactionID, int NumItems, ref Array ClientHandles, ref Array ItemValues, ref Array Qualities, ref Array TimeStamps)
-        {
-            for (int i = 1; i <= NumItems; i++)
-            {
-                if ((Convert.ToInt32(ClientHandles.GetValue(5)) == 1))
-                {
-                    modbusServer.holdingRegisters[3] = (short)ItemValues.GetValue(1);
-                }
-                if ((Convert.ToInt32(ClientHandles.GetValue(6)) == 1))
-                {
-                    modbusServer.holdingRegisters[4] = (short)ItemValues.GetValue(2);
-                }
-            }
-        }
-
-        private void ObjOPCGroupC04_DataChange(int TransactionID, int NumItems, ref Array ClientHandles, ref Array ItemValues, ref Array Qualities, ref Array TimeStamps)
-        {
-            for (int i = 1; i <= NumItems; i++)
-            {
-                if ((Convert.ToInt32(ClientHandles.GetValue(7)) == 1))
-                {
-                    modbusServer.holdingRegisters[3] = (short)ItemValues.GetValue(1);
-                }
-                if ((Convert.ToInt32(ClientHandles.GetValue(8)) == 1))
-                {
-                    modbusServer.holdingRegisters[4] = (short)ItemValues.GetValue(2);
-                }
-            }
         }
 
         private void configToolStripMenuItem_Click(object sender, EventArgs e)
