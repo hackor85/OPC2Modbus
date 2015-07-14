@@ -101,9 +101,10 @@ namespace OPC2Modbus
                 this.WindowState = FormWindowState.Minimized;
 
                 //Subscrib to OPC Server
-                ObjOPCServer = new OPCServer();
                 try
                 {
+                    ObjOPCServer = new OPCServer();
+
                     //Conect to the server
                     ObjOPCServer.Connect("POPCS.DAServer.1");
 
@@ -134,9 +135,10 @@ namespace OPC2Modbus
                     bFatal = true;
                     Application.Exit();
                 }
+
+                // Start modbus server.
                 try
                 {
-                    // Start modbus server.
                     modbusServer.Listen();
                 }
                 catch (Exception ex)
