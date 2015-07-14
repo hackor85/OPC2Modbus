@@ -21,9 +21,10 @@ namespace OPC2Modbus
         {
             InitializeComponent();
         }
-
+        
         private void Opc2Modbus_Load(object sender, EventArgs e)
         {
+            // Visualize only in nofification bar.
             this.Hide();
             this.WindowState = FormWindowState.Minimized;
             //OPCServerName = "POPCS.DAServer.1";
@@ -98,13 +99,38 @@ namespace OPC2Modbus
                 ObjOPCGroupC04.UpdateRate = 1000;
                 ObjOPCGroupC04.IsActive = true;
                 ObjOPCGroupC04.IsSubscribed = true;*/
+                // Start modbus server.
+                modbusServer.Listen();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
                 Application.Exit();
             }
-            modbusServer.Listen();
+        }
+
+        private void Opc2Modbus_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == WindowState) this.Hide();
+        }
+
+        private void Opc2Modbus_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (bExit)
+            {
+                if (MessageBox.Show("¿Seguro que quiere dejar de ejecutar OPC2Modbus?", "Salir de la aplicación", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                    bExit = false;
+                }
+            }
+            else
+            {
+                MessageBox.Show("OPC2Modbus va seguir ejecutándose en la barra de tareas.", "Aviso de funcionamiento", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                this.Hide();
+                this.WindowState = FormWindowState.Minimized;
+                e.Cancel = true;
+            }
         }
 
         private void ObjOPCGroupC01_DataChange(int TransactionID, int NumItems, ref Array ClientHandles, ref Array ItemValues, ref Array Qualities, ref Array TimeStamps)
@@ -179,30 +205,6 @@ namespace OPC2Modbus
         {
             bExit = true;
             Application.Exit();
-        }
-
-        private void Opc2Modbus_Resize(object sender, EventArgs e)
-        {
-            if (FormWindowState.Minimized == WindowState) this.Hide();
-        }
-
-        private void Opc2Modbus_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!bExit)
-            {
-                MessageBox.Show("OPC2Modbus va seguir ejecutándose en la barra de tareas.", "Aviso de funcionamiento", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                this.Hide();
-                this.WindowState = FormWindowState.Minimized;
-                e.Cancel = true;
-            }
-            else
-            {
-                if (MessageBox.Show("¿Seguro que quiere dejar de ejecutar OPC2Modbus?", "Salir de la aplicación", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
-                {
-                    e.Cancel = true;
-                    bExit = false;
-                }
-            }
         }
 
     }
