@@ -99,6 +99,7 @@
   <ItemGroup>
     <Content Include="lib\EasyModbus.dll" />
     <Content Include="lib\Interop.OPCAutomation.dll" />
+    <Content Include="scripts\CreateLog4NetTable.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

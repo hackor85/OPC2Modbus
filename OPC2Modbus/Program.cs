@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using log4net;
 using log4net.Config;
-[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
 namespace OPC2Modbus
 {
