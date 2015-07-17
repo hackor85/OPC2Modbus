@@ -1,38 +1,38 @@
-Modbus Address,OPC itemID,Description,Unit
-1,M0032,Suction gas temperature,§C
-2,M0033,Discharge gas temperature,§C
-3,M0034,Oil temp.,§C
-4,M0035,Suction pressure,Bar
-5,M0036,Discharge pressure,Bar
-6,M0037,Suction pressure,§C/R
-7,M0038,Discharge pressure,§C/R
-8,M0039,Capacity position,%
-9,M0040,Volume slide position (s),%
-10,M0041,Motor current,A
-11,M0042,External input,%
-12,M0043,Oil filter diff. pressure (s) / Intermediate pressure (r),Bar
-13,M0044,Suction gas superheat,§C
-14,M0045,Brine / intermediate temperature,§C
-15,M0046,Running hours,h
-16,M0047,Oil pressure,Bar
-17,M0062,Compressor mode,
-18,M0063,Compressor control mode,
-19,M0064,Sequence start number,
-20,M0065,System number,
-21,M0066,Ctrl. system (aggregate type),
-22,M0067,Multisab State,
-23,M0068,Preceding compressor,
-24,M0069,Next compressor,
-25,M0070,Compressor to follow the next,
-26,M0071,Selected sys regulator,
-27,M0073,Liquid temperature T3,§C
-28,M0080,Alarms (Reciprocating / Screw),
-29,M0081,Alarms (Reciprocating / Screw),
-30,M0082,Alarms (Reciprocating / Screw),
-31,M0083,Warnings (Reciprocating / Screw),
-32,M0084,Warnings (Reciprocating / Screw),
-33,M0085,Switch reg. SP1/ SP2,
-34,M0086,Set point actual suction pressure,§C/R
-35,M0170,Compressor type,
-36,M0171,Refrigerant type,
-37,M0172,Regulation mode,
+Modbus Address,OPC itemID,Description,Unit,Name,Descripción SCADA
+1,M0032,Suction gas temperature,ºC,SUCT_TEMP,Temperatura Aspiración
+2,M0033,Discharge gas temperature,ºC,DISCH_TEMP,Temperatura Descarga
+3,M0034,Oil temp.,ºC,OIL_TEMP,Temperatura Aceite
+4,M0035,Suction pressure,Bar,SUCT_PRESS_BAR,Presión Aspiración
+5,M0036,Discharge pressure,Bar,DISCH_PRESS_BAR,Presión Descarga
+6,M0037,Suction pressure,ºC/R,SUCT_PRESS,Presión Aspiración (sat)
+7,M0038,Discharge pressure,ºC/R,DISCH_PRESS,Presión Descarga (sat)
+8,M0039,Capacity position,%,CAPACITY,Capacidad
+9,M0040,Volume slide position (s),%,CAP_POSITION,Corredera
+10,M0041,Motor current,A,MOTOR_CURR,Corriente
+11,M0042,External input,%,EXT_INPUT,
+12,M0043,Oil filter diff. pressure (s) / Intermediate pressure (r),Bar,OIL_FILTER_DIFF,Presión Filtro Aceite
+13,M0044,Suction gas superheat,ºC,SUCT_SUPERHEAT,Recalentamiento Gas Aspiración
+14,M0045,Brine / intermediate temperature,ºC,INTERM_TEMP,
+15,M0046,Running hours,h,RUNNING_HOURS,Tiempo funcionamiento
+16,M0047,Oil pressure,Bar,LUB_PRESS,Presión Aceite
+17,M0062,Compressor mode,,COMPRESSOR_STATE,Estado Compresor
+18,M0063,Compressor control mode,,CONTROL_MODE,Modo Control
+19,M0064,Sequence start number,,,
+20,M0065,System number,,,
+21,M0066,Ctrl. system (aggregate type),,,
+22,M0067,Multisab State,,MULTISAB,Multisab
+23,M0068,Preceding compressor,,,
+24,M0069,Next compressor,,,
+25,M0070,Compressor to follow the next,,,
+26,M0071,Selected sys regulator,,,
+27,M0073,Liquid temperature T3,ºC,,
+28,M0080,Alarms (Reciprocating / Screw),,ALARM1,
+29,M0081,Alarms (Reciprocating / Screw),,ALARM2,
+30,M0082,Alarms (Reciprocating / Screw),,ALARM3,
+31,M0083,Warnings (Reciprocating / Screw),,WARN1,
+32,M0084,Warnings (Reciprocating / Screw),,WARN2,
+33,M0085,Switch reg. SP1/ SP2,,,
+34,M0086,Set point actual suction pressure,ºC/R,SUCT_PRESS_SP,Consigna de aspiración
+35,M0170,Compressor type,,COMPRESSOR_TYPE,Tipo de compresor
+36,M0171,Refrigerant type,,REFRIGERANT_TYPE,Refrigerante
+37,M0172,Regulation mode,,CONTROL_ON,Control por
